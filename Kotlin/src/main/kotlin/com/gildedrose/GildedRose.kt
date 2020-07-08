@@ -5,7 +5,7 @@ class GildedRose(var items: Array<Item>) {
     private fun updateSellIn(item: Item) {
         item.sellIn -= 1
     }
-    private fun agedBrieProcessor(item: Item){
+    private fun agedBrieProcessor(item: Item) {
         when {
             item.sellIn > 0 -> item.quality += 1
             item.sellIn <= 0 -> item.quality += 2
@@ -15,7 +15,7 @@ class GildedRose(var items: Array<Item>) {
         }
         updateSellIn(item)
     }
-    private fun normalItemProcessor(item: Item){
+    private fun normalItemProcessor(item: Item) {
         when {
             item.sellIn >= 1 -> item.quality -= 1
             item.sellIn < 1 -> item.quality -= 2
@@ -27,10 +27,10 @@ class GildedRose(var items: Array<Item>) {
         }
         updateSellIn(item)
     }
-    private fun sulfurasProcessor(item: Item){
+    private fun sulfurasProcessor(item: Item) {
         item.quality = 80
     }
-    private fun concertProcessor(item: Item){
+    private fun concertProcessor(item: Item) {
         when {
             item.sellIn in 1..5 -> item.quality += 3
             item.sellIn in 6..10 -> item.quality += 2
