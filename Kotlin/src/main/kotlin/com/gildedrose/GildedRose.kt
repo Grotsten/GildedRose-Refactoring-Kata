@@ -1,24 +1,24 @@
 package com.gildedrose
 
 class GildedRose(var items: Array<Item>) {
+    //decrements sellIn date
     private fun updateSellIn(item: Item) {
         item.sellIn -= 1
     }
     private fun agedBrieProcessor(item: Item){
-        if (item.quality < 50) {
-            if (item.sellIn > 0) {
-                item.quality += 1
-            } else{
-                item.quality += 2
-            }
+        when {
+            item.sellIn > 0 -> item.quality += 1
+            item.sellIn <= 0 -> item.quality += 2
+        }
+        if (item.quality > 50){
+            item.quality = 50
         }
         updateSellIn(item)
     }
     private fun normalItemProcessor(item: Item){
-        if (item.sellIn<1) {
-            item.quality -= 2
-        } else {
-            item.quality -= 1
+        when {
+            item.sellIn >= 1 -> item.quality -= 1
+            item.sellIn < 1 -> item.quality -= 2
         }
         if (item.quality < 0){
             item.quality = 0
@@ -31,26 +31,14 @@ class GildedRose(var items: Array<Item>) {
         item.quality = 80
     }
     private fun concertProcessor(item: Item){
-        if (item.quality < 50) {
-            item.quality = item.quality + 1
-
-            if (item.name == "Backstage passes to a TAFKAL80ETC concert") {
-                if (item.sellIn < 11) {
-                    if (item.quality < 50) {
-                        item.quality = item.quality + 1
-                    }
-                }
-
-                if (item.sellIn < 6) {
-                    if (item.quality < 50) {
-                        item.quality = item.quality + 1
-                    }
-                }
-            }
+        when {
+            item.sellIn in 1..5 -> item.quality += 3
+            item.sellIn in 6..10 -> item.quality += 2
+            item.sellIn > 10 -> item.quality += 1
+            item.sellIn < 1 -> item.quality = 0
         }
-
-        if (item.sellIn < 1) {
-            item.quality = 0
+        if (item.quality > 50){
+            item.quality = 50
         }
         updateSellIn(item)
     }
