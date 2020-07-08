@@ -17,6 +17,7 @@ open class Item(var name: String, var sellIn: Int, var quality: Int) {
         checkQuality()
         updateSellIn()
     }
+
     open fun checkQuality() {
         when {
             this.quality < 0 -> this.quality = 0
