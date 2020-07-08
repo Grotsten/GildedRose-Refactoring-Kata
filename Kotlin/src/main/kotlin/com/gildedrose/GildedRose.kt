@@ -1,7 +1,10 @@
 package com.gildedrose
 
 class GildedRose(var items: Array<Item>) {
-    fun agedBrieProcessor(item: Item){
+    private fun updateSellIn(item: Item) {
+        item.sellIn -= 1
+    }
+    private fun agedBrieProcessor(item: Item){
         if (item.quality < 50) {
             if (item.sellIn > 0) {
                 item.quality += 1
@@ -9,9 +12,9 @@ class GildedRose(var items: Array<Item>) {
                 item.quality += 2
             }
         }
-        item.sellIn -= 1
+        updateSellIn(item)
     }
-    fun normalItemProcessor(item: Item){
+    private fun normalItemProcessor(item: Item){
         if (item.sellIn<1) {
             item.quality -= 2
         } else {
@@ -22,12 +25,12 @@ class GildedRose(var items: Array<Item>) {
         } else if (item.quality > 50) {
             item.quality = 50
         }
-        item.sellIn -= 1
+        updateSellIn(item)
     }
-    fun sulfurasProcessor(item: Item){
+    private fun sulfurasProcessor(item: Item){
         item.quality = 80
     }
-    fun concertProcessor(item: Item){
+    private fun concertProcessor(item: Item){
         if (item.quality < 50) {
             item.quality = item.quality + 1
 
@@ -49,43 +52,48 @@ class GildedRose(var items: Array<Item>) {
         if (item.sellIn < 1) {
             item.quality = 0
         }
-        item.sellIn -= 1
+        updateSellIn(item)
     }
 
-    fun checkConjured(item: Item): Boolean {
+    private fun checkConjured(item: Item): Boolean {
         return item.name.startsWith("Conjured")
     }
 
-    fun conjuredProcessor(item: Item) {
+    private fun conjuredProcessor(item: Item) {
         item.quality -= 2
         if (item.sellIn < 1) {
             item.quality -= 2
         }
-        item.sellIn -= 1
+
         if (item.quality < 0){
             item.quality = 0
         } else if (item.quality > 50){
             item.quality = 50
         }
+        updateSellIn(item)
      }
-    fun processItem(item: Item) {
-        if (item.name == "Backstage passes to a TAFKAL80ETC concert") {
-            concertProcessor(item)
-        } else if (item.name == "Sulfuras, Hand of Ragnaros"){
-            sulfurasProcessor(item)
-        } else if (item.name == "Aged Brie") {
-            agedBrieProcessor(item)
-        } else if (checkConjured(item)){
-            conjuredProcessor(item)
-        } else {
-            normalItemProcessor(item)
+    private fun processItem(item: Item) {
+        when {
+            item.name == "Backstage passes to a TAFKAL80ETC concert" -> {
+                concertProcessor(item)
+            }
+            item.name == "Sulfuras, Hand of Ragnaros" -> {
+                sulfurasProcessor(item)
+            }
+            item.name == "Aged Brie" -> {
+                agedBrieProcessor(item)
+            }
+            checkConjured(item) -> {
+                conjuredProcessor(item)
+            }
+            else -> {
+                normalItemProcessor(item)
+            }
         }
     }
 
     fun updateQuality() {
-        for (item in items) {
-            processItem(item)
-        }
+        items.map { item -> processItem(item) }
     }
 
 }
